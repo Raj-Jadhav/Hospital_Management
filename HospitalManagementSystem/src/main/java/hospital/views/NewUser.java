@@ -2,13 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-//package hospital.views;
+package hospital.views;
 
 //import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 //import javax.swing.JPasswordField;
 /**
  *
@@ -210,7 +211,7 @@ private void clearFields() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateUserActionPerformed
-    Connection con = null;
+    Connection conn = null;
     PreparedStatement pst = null;
 
     String username = txtUsername.getText();
@@ -218,6 +219,7 @@ private void clearFields() {
     String fullName = txtFullName.getText();
     String department =(String) comboDepartment.getSelectedItem();
     String email = txtEmail.getText();
+    String contact = txtContact.getText();
 
     if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || department.isEmpty() || email.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please fill in all fields.");
@@ -225,23 +227,24 @@ private void clearFields() {
     }
 
     try {
-        con = hospital.db.ConnectDB.ConnectDB();
+        conn = hospital.db.ConnectDB.ConnectDB();
 
         String check = "SELECT * FROM admin WHERE login_id = ?";
-        pst = con.prepareStatement(check);
+        pst = conn.prepareStatement(check);
         pst.setString(1, username);
         ResultSet rs = pst.executeQuery();
 
         if (rs.next()) {
             JOptionPane.showMessageDialog(this, "Username already exists.");
         } else {
-            String sql = "INSERT INTO admin (login_id, password, full_name, department, email) VALUES (?, ?, ?, ?, ?)";
-            pst = con.prepareStatement(sql);
+            String sql = "INSERT INTO admin (login_id, password, full_name, department, email, contact) VALUES (?, ?, ?, ?, ?, ?)";
+            pst = conn.prepareStatement(sql);
             pst.setString(1, username);
             pst.setString(2, password);
             pst.setString(3, fullName);
             pst.setString(4, department);
             pst.setString(5, email);
+            pst.setString(6, contact);
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this, "User created successfully.");
 
@@ -250,12 +253,8 @@ private void clearFields() {
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e);
-    }
-}
-
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnCreateUserActionPerformed
-
+    }
     /**
      * @param args the command line arguments
      */
@@ -265,32 +264,13 @@ private void clearFields() {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
                 new NewUser().setVisible(true);
             }
-        });
-    }
+    });
+}
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
@@ -313,4 +293,4 @@ private void clearFields() {
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
-
+}
