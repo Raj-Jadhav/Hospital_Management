@@ -41,6 +41,8 @@ private void clearFields() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -60,6 +62,19 @@ private void clearFields() {
         btnDeleteUser = new javax.swing.JButton();
         btnUpdateUser = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,18 +162,33 @@ private void clearFields() {
 
         btnDeleteUser.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         btnDeleteUser.setText("DELETE");
+        btnDeleteUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteUserActionPerformed(evt);
+            }
+        });
 
         btnUpdateUser.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         btnUpdateUser.setText("UPDATE");
+        btnUpdateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateUserActionPerformed(evt);
+            }
+        });
 
         btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -180,20 +210,20 @@ private void clearFields() {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(btnCreateUser)
-                .addGap(18, 18, 18)
-                .addComponent(btnDeleteUser)
-                .addGap(18, 18, 18)
-                .addComponent(btnUpdateUser)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnClose)
-                .addGap(34, 34, 34))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnCreateUser)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDeleteUser)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdateUser)
+                        .addGap(113, 113, 113)
+                        .addComponent(btnClose))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,7 +284,71 @@ private void clearFields() {
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e);
     }//GEN-LAST:event_btnCreateUserActionPerformed
+}
+    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+    Connection con = null;
+    PreparedStatement pst = null;
+
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?", "Confirm", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) return;
+
+    try {
+        con = hospital.db.ConnectDB.ConnectDB();
+        String sql = "DELETE FROM admin WHERE login_id=?";
+        pst = con.prepareStatement(sql);
+        pst.setString(1, txtUsername.getText());
+
+        int rows = pst.executeUpdate();
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(this, "User deleted.");
+            clearFields();
+            txtUsername.setEditable(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "User not found or already deleted.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e);
     }
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnDeleteUserActionPerformed
+
+    private void btnUpdateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateUserActionPerformed
+    Connection con = null;
+    PreparedStatement pst = null;
+
+    try {
+        con = hospital.db.ConnectDB.ConnectDB();
+        String sql = "UPDATE admin SET password=?, full_name=?, department=?, email=?, contact=? WHERE login_id=?";
+        pst = con.prepareStatement(sql);
+
+        pst.setString(1, new String(txtPassword.getPassword()));
+        pst.setString(2, txtFullName.getText());        
+        pst.setString(3, (String)comboDepartment.getSelectedItem());
+        pst.setString(4, txtEmail.getText());
+        pst.setString(5, txtContact.getText());
+        pst.setString(6, txtUsername.getText());
+        
+
+        int rows = pst.executeUpdate();
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(this, "User updated successfully.");
+            txtUsername.setEditable(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Update failed.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e);
+    }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnUpdateUserActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        System.exit(0);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCloseActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -287,6 +381,8 @@ private void clearFields() {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtContact;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtFullName;
