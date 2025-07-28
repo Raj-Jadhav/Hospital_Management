@@ -17,15 +17,28 @@ public class PatientRegistration extends javax.swing.JFrame {
 private Integer patientID = null;
     /**
      * Creates new form PatientRegistration
+     * @param id
      */
+    public PatientRegistration() {
+        initComponents();
+        setLocationRelativeTo(null);
+        clearFields(); // Ensure fields are empty for new registration
+    }
+
     public PatientRegistration(int id) {
         initComponents();
         setLocationRelativeTo(null);
-        this.patientID = id;
+        this.patientID = id == 0? null : id;
         loadPatientDetails(id);
 
     }
+
+    
 private void loadPatientDetails(int id) {
+    if (id == 0){
+        clearFields();
+        return;
+    }
     try {
         Connection con = hospital.db.ConnectDB.ConnectDB();
         String sql = "SELECT * FROM patients WHERE patient_id = ?";
@@ -42,9 +55,13 @@ private void loadPatientDetails(int id) {
             txtPContact.setText(rs.getString("contact_no"));
             txtPAddress.setText(rs.getString("address"));
             txtPRemarks.setText(rs.getString("remarks"));
+        }else{
+            JOptionPane.showMessageDialog(this, "No patient found with ID: " + id);
+                clearFields();
         }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e);
+        JOptionPane.showMessageDialog(this, "Error loading patient details: " + e.getMessage());
+            clearFields();
     }
 }
 private void clearFields() {

@@ -25,6 +25,7 @@
     <version>3.1.0</version>
     <configuration>
         <mainClass>hospital.views.NewUser</mainClass>
+        <mainClass>hospital.views.PatientList</mainClass>
     </configuration>
 </plugin>
   

@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(new JLabel("Welcome to Hospital Management System!"));
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,9 +114,19 @@ public class Main extends javax.swing.JFrame {
         jMenu2.setText("Patients");
 
         menuPRegistration.setText("Registration");
+        menuPRegistration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPRegistrationActionPerformed(evt);
+            }
+        });
         jMenu2.add(menuPRegistration);
 
         menuPList.setText("Patient List");
+        menuPList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPListActionPerformed(evt);
+            }
+        });
         jMenu2.add(menuPList);
 
         jMenuBar1.add(jMenu2);
@@ -124,6 +134,11 @@ public class Main extends javax.swing.JFrame {
         jMenu3.setText("Doctors");
 
         menuDEntry.setText("Doctor Entry");
+        menuDEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDEntryActionPerformed(evt);
+            }
+        });
         jMenu3.add(menuDEntry);
 
         menuDList.setText("Doctor List");
@@ -186,7 +201,10 @@ public class Main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    private void menuPatientRegistrationActionPerformed(java.awt.event.ActionEvent evt) {
+        
+    }
+   
     private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
@@ -206,6 +224,22 @@ public class Main extends javax.swing.JFrame {
         user.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuNewUserActionPerformed
+
+    private void menuPListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPListActionPerformed
+      PatientList plist = new PatientList();
+        plist.setVisible(true);
+       // TODO add your handling code here:
+    }//GEN-LAST:event_menuPListActionPerformed
+
+    private void menuPRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRegistrationActionPerformed
+        new PatientRegistration().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuPRegistrationActionPerformed
+
+    private void menuDEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDEntryActionPerformed
+        new DoctorEntry().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuDEntryActionPerformed
 
     /**
      * @param args the command line arguments

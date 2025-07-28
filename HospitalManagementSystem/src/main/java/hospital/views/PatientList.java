@@ -1,3 +1,4 @@
+package hospital.views;
 
 
 /*
@@ -107,7 +108,7 @@ public class PatientList extends javax.swing.JFrame {
 
     try {
         Connection conn = hospital.db.ConnectDB.ConnectDB();
-        String sql = "SELECT patient_id, patient_name, age, gender, contact_no FROM patients";
+        String sql = "SELECT patient_id, patient_name, fathers_name, age, gender, blood_group, address, remarks, contact_no FROM patients";
         PreparedStatement pst = conn.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
         tblPatients.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
@@ -120,7 +121,7 @@ public class PatientList extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
