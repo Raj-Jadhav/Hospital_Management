@@ -154,6 +154,11 @@ public class Main extends javax.swing.JFrame {
         jMenu4.setText("Rooms");
 
         menuAddRm.setText("Add Room");
+        menuAddRm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAddRmActionPerformed(evt);
+            }
+        });
         jMenu4.add(menuAddRm);
 
         menuViewRm.setText("View Room");
@@ -250,6 +255,11 @@ public class Main extends javax.swing.JFrame {
         new DoctorList().setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuDListActionPerformed
+
+    private void menuAddRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddRmActionPerformed
+      new RoomManagement(null).setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuAddRmActionPerformed
 
     /**
      * @param args the command line arguments
