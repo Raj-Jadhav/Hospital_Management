@@ -97,8 +97,6 @@ private Integer doctorID = null;
         spinnerDOJ = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtQualifications = new javax.swing.JTextArea();
-        jLabel9 = new javax.swing.JLabel();
-        txtDoctorID = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
@@ -130,8 +128,6 @@ private Integer doctorID = null;
         txtQualifications.setRows(5);
         jScrollPane1.setViewportView(txtQualifications);
 
-        jLabel9.setText("Doctor ID");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -145,8 +141,7 @@ private Integer doctorID = null;
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel7))
                 .addGap(38, 38, 38)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(spinnerDOJ)
@@ -155,17 +150,13 @@ private Integer doctorID = null;
                     .addComponent(txtContact)
                     .addComponent(txtSpecialization)
                     .addComponent(txtName)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(txtDoctorID))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -280,7 +271,7 @@ private Integer doctorID = null;
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -334,60 +325,122 @@ private Integer doctorID = null;
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
 
-    if (doctorID == null) {
-        JOptionPane.showMessageDialog(this, "No doctor selected.");
-        return;
-    }
+    String doctorName = txtName.getText().trim();
+        if (doctorName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Doctor name is required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!txtEmail.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            JOptionPane.showMessageDialog(this, "Invalid email format.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!txtContact.getText().matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this, "Contact number must be 10 digits.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    try {
-        Connection conn = hospital.db.ConnectDB.ConnectDB();
-        String sql = "UPDATE doctors SET doctor_name=?, specialization=?, contact_no=?, email=?, address=?, qualifications=?, date_of_joining=? WHERE doctor_id=?";
-        PreparedStatement pst = conn.prepareStatement(sql);
-        pst.setString(1, txtName.getText());
-        pst.setString(2, txtSpecialization.getText());
-        pst.setString(3, txtContact.getText());
-        pst.setString(4, txtEmail.getText());
-        pst.setString(5, txtAddress.getText());
-        pst.setString(6, txtQualifications.getText());
-        java.util.Date doj = (java.util.Date) spinnerDOJ.getValue();
-        pst.setDate(7, doj != null ? new java.sql.Date(doj.getTime()) : null);
-        pst.setInt(8, doctorID);
+        // Look up doctor_id based on doctor_name
+        Integer newDoctorID = null;
+        try (Connection conn = hospital.db.ConnectDB.ConnectDB();
+             PreparedStatement pst = conn.prepareStatement("SELECT doctor_id FROM doctors WHERE doctor_name = ?")) {
+            pst.setString(1, doctorName);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                newDoctorID = rs.getInt("doctor_id");
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(this, "Multiple doctors found with name: " + doctorName, "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No doctor found with name: " + doctorName, "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error finding doctor: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            return;
+        }
 
-        pst.executeUpdate();
+        // Perform the update
+        try (Connection conn = hospital.db.ConnectDB.ConnectDB();
+             PreparedStatement pst = conn.prepareStatement(
+                 "UPDATE doctors SET doctor_name=?, specialization=?, contact_no=?, email=?, address=?, qualifications=?, date_of_joining=? WHERE doctor_id=?")) {
+            pst.setString(1, txtName.getText().trim());
+            pst.setString(2, txtSpecialization.getText().trim());
+            pst.setString(3, txtContact.getText().trim());
+            pst.setString(4, txtEmail.getText().trim());
+            pst.setString(5, txtAddress.getText().trim());
+            pst.setString(6, txtQualifications.getText().trim());
+            java.util.Date doj = (java.util.Date) spinnerDOJ.getValue();
+            pst.setDate(7, doj != null ? new java.sql.Date(doj.getTime()) : null);
+            pst.setInt(8, newDoctorID);
 
-        JOptionPane.showMessageDialog(this, "Doctor updated.");
-        clearFields();
-        pst.close();
-        conn.close();
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error updating doctor.", "Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Doctor updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                doctorID = newDoctorID; // Update the stored doctorID
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update doctor.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error updating doctor: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    
             // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
     
-        if (doctorID == null) {
-            JOptionPane.showMessageDialog(this, "No doctor selected.");
+        String doctorName = txtName.getText().trim();
+        if (doctorName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Doctor name is required.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Delete this doctor?", "Confirm", JOptionPane.YES_NO_OPTION);
+        // Look up doctor_id based on doctor_name
+        Integer newDoctorID = null;
+        try (Connection conn = hospital.db.ConnectDB.ConnectDB();
+             PreparedStatement pst = conn.prepareStatement("SELECT doctor_id FROM doctors WHERE doctor_name = ?")) {
+            pst.setString(1, doctorName);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                newDoctorID = rs.getInt("doctor_id");
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(this, "Multiple doctors found with name: " + doctorName, "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No doctor found with name: " + doctorName, "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error finding doctor: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            return;
+        }
+
+        // Confirm deletion
+        int confirm = JOptionPane.showConfirmDialog(this, "Delete doctor '" + doctorName + "'?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        try {
-            Connection con = hospital.db.ConnectDB.ConnectDB();
-            String sql = "DELETE FROM doctors WHERE doctor_id=?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, doctorID);
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Doctor deleted.");
-            clearFields();
+        // Perform the deletion
+        try (Connection conn = hospital.db.ConnectDB.ConnectDB();
+             PreparedStatement pst = conn.prepareStatement("DELETE FROM doctors WHERE doctor_id=?")) {
+            pst.setInt(1, newDoctorID);
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Doctor deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete doctor.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e);
+            JOptionPane.showMessageDialog(this, "Error deleting doctor: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -446,7 +499,6 @@ private Integer doctorID = null;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -454,7 +506,6 @@ private Integer doctorID = null;
     private javax.swing.JSpinner spinnerDOJ;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtContact;
-    private javax.swing.JTextField txtDoctorID;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextArea txtQualifications;

@@ -142,6 +142,11 @@ public class Main extends javax.swing.JFrame {
         jMenu3.add(menuDEntry);
 
         menuDList.setText("Doctor List");
+        menuDList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDListActionPerformed(evt);
+            }
+        });
         jMenu3.add(menuDList);
 
         jMenuBar1.add(jMenu3);
@@ -240,6 +245,11 @@ public class Main extends javax.swing.JFrame {
         new DoctorEntry().setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuDEntryActionPerformed
+
+    private void menuDListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDListActionPerformed
+        new DoctorList().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuDListActionPerformed
 
     /**
      * @param args the command line arguments
