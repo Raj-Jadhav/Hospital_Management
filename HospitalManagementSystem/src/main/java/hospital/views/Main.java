@@ -51,7 +51,7 @@ public class Main extends javax.swing.JFrame {
         menuViewRm = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         menuAddSvc = new javax.swing.JMenuItem();
-        menuViewSvc = new javax.swing.JMenuItem();
+        menuBilling = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuLogout = new javax.swing.JMenuItem();
         menuExit = new javax.swing.JMenuItem();
@@ -181,8 +181,13 @@ public class Main extends javax.swing.JFrame {
         });
         jMenu5.add(menuAddSvc);
 
-        menuViewSvc.setText("View Services");
-        jMenu5.add(menuViewSvc);
+        menuBilling.setText("Billing");
+        menuBilling.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBillingActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuBilling);
 
         jMenuBar1.add(jMenu5);
 
@@ -281,6 +286,11 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuAddSvcActionPerformed
 
+    private void menuBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBillingActionPerformed
+        new Billing().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuBillingActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -329,6 +339,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JMenuItem menuAddRm;
     private javax.swing.JMenuItem menuAddSvc;
+    private javax.swing.JMenuItem menuBilling;
     private javax.swing.JMenuItem menuDEntry;
     private javax.swing.JMenuItem menuDList;
     private javax.swing.JMenuItem menuExit;
@@ -337,6 +348,5 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuPList;
     private javax.swing.JMenuItem menuPRegistration;
     private javax.swing.JMenuItem menuViewRm;
-    private javax.swing.JMenuItem menuViewSvc;
     // End of variables declaration//GEN-END:variables
 }

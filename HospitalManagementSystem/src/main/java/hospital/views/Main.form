@@ -101,10 +101,13 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuAddSvcActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuViewSvc">
+            <MenuItem class="javax.swing.JMenuItem" name="menuBilling">
               <Properties>
-                <Property name="text" type="java.lang.String" value="View Services"/>
+                <Property name="text" type="java.lang.String" value="Billing"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuBillingActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
