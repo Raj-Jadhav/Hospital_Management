@@ -162,6 +162,11 @@ public class Main extends javax.swing.JFrame {
         jMenu4.add(menuAddRm);
 
         menuViewRm.setText("View Room");
+        menuViewRm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuViewRmActionPerformed(evt);
+            }
+        });
         jMenu4.add(menuViewRm);
 
         jMenuBar1.add(jMenu4);
@@ -169,6 +174,11 @@ public class Main extends javax.swing.JFrame {
         jMenu5.setText("Services");
 
         menuAddSvc.setText("Add Service");
+        menuAddSvc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAddSvcActionPerformed(evt);
+            }
+        });
         jMenu5.add(menuAddSvc);
 
         menuViewSvc.setText("View Services");
@@ -260,6 +270,16 @@ public class Main extends javax.swing.JFrame {
       new RoomManagement(null).setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuAddRmActionPerformed
+
+    private void menuViewRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuViewRmActionPerformed
+        new RoomList().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuViewRmActionPerformed
+
+    private void menuAddSvcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddSvcActionPerformed
+        new ServiceEntry().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuAddSvcActionPerformed
 
     /**
      * @param args the command line arguments
