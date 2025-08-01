@@ -22,6 +22,7 @@ private Integer doctorID = null;
         initComponents();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        loadDepartments();
     }
     
     public DoctorEntry(int id) {
@@ -29,6 +30,7 @@ private Integer doctorID = null;
     setLocationRelativeTo(null);
     this.doctorID = id;
     loadDoctorDetails(id);
+    loadDepartments();
     }
     private void clearFields() {        
     txtName.setText("");
@@ -49,6 +51,15 @@ private Integer doctorID = null;
         PreparedStatement pst = conn.prepareStatement(sql);
         pst.setInt(1, id);
         ResultSet rs = pst.executeQuery();
+       
+        int deptID = rs.getInt("department_id");
+        for (int i = 0; i < cmbDepartment.getItemCount(); i++) {
+        String item = (String) cmbDepartment.getItemAt(i);
+        if (item.startsWith(deptID + " -")) {
+        cmbDepartment.setSelectedIndex(i);
+        break;
+    }
+}
 
         if (rs.next()) {
             txtName.setText(rs.getString("doctor_name"));
@@ -65,12 +76,50 @@ private Integer doctorID = null;
             pst.close();
             conn.close();
         }
-    } catch (Exception e) {
+        } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error loading doctor details.", "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace(); // Log to console or file
     }
+}
     
+    private void loadDepartmentsForDoctors() {
+    cmbDepartment.removeAllItems();
+    try {
+        Connection con = hospital.db.ConnectDB.ConnectDB();
+        String sql = "SELECT department_id, department_name FROM departments";
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            cmbDepartment.addItem(rs.getInt("department_id") + " - " + rs.getString("department_name"));
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
+}
+
+    private void loadDepartments() {
+    cmbDepartment.removeAllItems();
+    try {
+        Connection con = hospital.db.ConnectDB.ConnectDB();
+        String sql = "SELECT department_id, department_name FROM departments";
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("department_id");
+            String name = rs.getString("department_name");
+            cmbDepartment.addItem(id + " - " + name);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading departments: " + e.getMessage());
+    }
+}
+
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -97,6 +146,8 @@ private Integer doctorID = null;
         spinnerDOJ = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtQualifications = new javax.swing.JTextArea();
+        jLabel9 = new javax.swing.JLabel();
+        cmbDepartment = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
@@ -128,6 +179,8 @@ private Integer doctorID = null;
         txtQualifications.setRows(5);
         jScrollPane1.setViewportView(txtQualifications);
 
+        jLabel9.setText("Department");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -141,7 +194,8 @@ private Integer doctorID = null;
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel9))
                 .addGap(38, 38, 38)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(spinnerDOJ)
@@ -150,7 +204,8 @@ private Integer doctorID = null;
                     .addComponent(txtContact)
                     .addComponent(txtSpecialization)
                     .addComponent(txtName)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(cmbDepartment, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -184,7 +239,11 @@ private Integer doctorID = null;
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(cmbDepartment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15))
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -269,9 +328,11 @@ private Integer doctorID = null;
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -296,9 +357,10 @@ private Integer doctorID = null;
     }
 
     try {
+        int deptID = Integer.parseInt(cmbDepartment.getSelectedItem().toString().split(" - ")[0]);
         Connection conn;
         conn = hospital.db.ConnectDB.ConnectDB();
-        String sql = "INSERT INTO doctors (doctor_name, specialization, contact_no, email, address, qualifications, date_of_joining) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO doctors (doctor_name, specialization, contact_no, email, address, qualifications, date_of_joining, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         pst = conn.prepareStatement(sql);
         pst.setString(1, txtName.getText());
@@ -309,6 +371,7 @@ private Integer doctorID = null;
         pst.setString(6, txtQualifications.getText());
         java.util.Date doj = (java.util.Date) spinnerDOJ.getValue();
         pst.setDate(7, doj != null ? new java.sql.Date(doj.getTime()) : null);
+        pst.setInt(8, deptID);
         
         pst.executeUpdate();
 
@@ -491,6 +554,7 @@ private Integer doctorID = null;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> cmbDepartment;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -499,6 +563,7 @@ private Integer doctorID = null;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

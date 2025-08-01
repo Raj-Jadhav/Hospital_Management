@@ -64,39 +64,58 @@ public class Billing extends javax.swing.JFrame {
         }
     }
     private void loadAssignedServices(int patientID) {
-    try (Connection conn = hospital.db.ConnectDB.ConnectDB()) {
-        // Query for table data
-        try (PreparedStatement pst = conn.prepareStatement(
-             "SELECT s.service_name AS [Service], s.service_charge AS [Charge], b.date_given AS [Date] " +
-             "FROM billing b JOIN services s ON b.service_id = s.service_id WHERE b.patient_id = ?")) {
-            pst.setInt(1, patientID);
-            try (ResultSet rs = pst.executeQuery()) {
-                tblAssigned.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));
-            }
+        BigDecimal serviceTotal = BigDecimal.ZERO;
+        BigDecimal roomCharge = BigDecimal.ZERO;
+
+        try {
+            Connection con = hospital.db.ConnectDB.ConnectDB();
+
+            // 1. Load services assigned to patient
+            String serviceSql = """
+                SELECT s.service_name AS [Service], s.service_charge AS [Charge], b.date_given AS [Date]
+                FROM billing b
+                JOIN services s ON b.service_id = s.service_id
+                WHERE b.patient_id = ?
+                """;
+
+            PreparedStatement pst1 = con.prepareStatement(serviceSql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            pst1.setInt(1, patientID);
+            ResultSet rs1 = pst1.executeQuery();
+
+            tblAssigned.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs1));
+
+            // Calculate total of services
+            rs1.beforeFirst();
+            while (rs1.next()) {
+            serviceTotal = serviceTotal.add(rs1.getBigDecimal("Charge"));
         }
 
-        // Separate query for total
-        try (PreparedStatement pstTotal = conn.prepareStatement(
-             "SELECT SUM(s.service_charge) AS TotalCharge " +
-             "FROM billing b JOIN services s ON b.service_id = s.service_id WHERE b.patient_id = ?")) {
-            pstTotal.setInt(1, patientID);
-            try (ResultSet rsTotal = pstTotal.executeQuery()) {
-                BigDecimal total = BigDecimal.ZERO;
-                if (rsTotal.next() && rsTotal.getBigDecimal("TotalCharge") != null) {
-                    total = rsTotal.getBigDecimal("TotalCharge");
-                }
-                txtTotal.setText(total.toPlainString());
+            // 2. Get room charge via room_id from patients
+            String roomSql = "SELECT r.room_charges FROM patients p JOIN room r ON p.room_id = r.room_id WHERE p.patient_id = ?";
+            PreparedStatement pst2 = con.prepareStatement(roomSql);
+            pst2.setInt(1, patientID);
+            ResultSet rs2 = pst2.executeQuery();
+
+            if (rs2.next()) {
+                roomCharge = rs2.getBigDecimal("room_charges");
             }
-        }
-    } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Error loading assigned services", e);
-        JOptionPane.showMessageDialog(this, "Error loading assigned services: " + e.getMessage());
+
+            // 3. Set all totals in UI
+            BigDecimal grandTotal = serviceTotal.add(roomCharge);
+            txtServiceTotal.setText(serviceTotal.toPlainString());
+            txtRoomCharge.setText(roomCharge.toPlainString());
+            txtTotal.setText(grandTotal.toPlainString());
+
+        } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading billing info: " + e.getMessage());
     }
 }
     
     private void clearFields() {
     cmbPatient.setSelectedIndex(-1);
     lstServices.clearSelection();
+    txtServiceTotal.setText("");
+    txtRoomCharge.setText("");
     txtTotal.setText("");
     tblAssigned.setModel(new DefaultTableModel());
 }
@@ -123,6 +142,10 @@ public class Billing extends javax.swing.JFrame {
         txtTotal = new javax.swing.JTextField();
         btnAssign = new javax.swing.JButton();
         btnGenerateBill = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtRoomCharge = new javax.swing.JTextField();
+        txtServiceTotal = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -161,7 +184,9 @@ public class Billing extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(lstServices);
 
-        jLabel4.setText("Total Amount:");
+        jLabel4.setText("Total Amount :");
+
+        txtTotal.setEditable(false);
 
         btnAssign.setText("Assign/Add");
         btnAssign.addActionListener(new java.awt.event.ActionListener() {
@@ -177,6 +202,14 @@ public class Billing extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("Services Total :");
+
+        jLabel7.setText("Room Charges :");
+
+        txtRoomCharge.setEditable(false);
+
+        txtServiceTotal.setEditable(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -191,18 +224,28 @@ public class Billing extends javax.swing.JFrame {
                         .addGap(39, 39, 39))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbPatient, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3)
-                            .addComponent(jScrollPane2))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(cmbPatient, 0, 211, Short.MAX_VALUE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(86, 86, 86)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTotal))
+                                .addGap(83, 83, 83)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtServiceTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel4))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtTotal)
+                                            .addComponent(txtRoomCharge, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(24, 24, 24))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(66, 66, 66)
@@ -224,15 +267,23 @@ public class Billing extends javax.swing.JFrame {
                         .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtServiceTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(txtRoomCharge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAssign)
@@ -251,7 +302,7 @@ public class Billing extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -410,12 +461,16 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> lstServices;
     private javax.swing.JTable tblAssigned;
+    private javax.swing.JTextField txtRoomCharge;
+    private javax.swing.JTextField txtServiceTotal;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 

@@ -61,6 +61,7 @@ public class DoctorList extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("DOCTORS LIST");
 
         btnEdit.setText("Edit");
@@ -80,7 +81,7 @@ public class DoctorList extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 484, Short.MAX_VALUE)
                         .addComponent(btnEdit)
                         .addGap(18, 18, 18)
                         .addComponent(btnLoad)))
@@ -119,7 +120,7 @@ public class DoctorList extends javax.swing.JFrame {
         
     try {
         Connection conn = hospital.db.ConnectDB.ConnectDB();
-        String sql = "SELECT doctor_id, doctor_name, specialization, contact_no, email FROM doctors";
+        String sql = "SELECT doctor_name, specialization, contact_no, email, address, qualifications, date_of_joining, department_id, email FROM doctors";
         PreparedStatement pst = conn.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
         tblDoctors.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(rs));

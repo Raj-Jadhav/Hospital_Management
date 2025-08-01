@@ -43,6 +43,8 @@ public class Main extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         menuPRegistration = new javax.swing.JMenuItem();
         menuPList = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuDEntry = new javax.swing.JMenuItem();
         menuDList = new javax.swing.JMenuItem();
@@ -130,6 +132,18 @@ public class Main extends javax.swing.JFrame {
         jMenu2.add(menuPList);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu7.setText("Departments");
+
+        jMenuItem1.setText("Department Creation");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu7);
 
         jMenu3.setText("Doctors");
 
@@ -291,6 +305,11 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuBillingActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new DepartmentEntry().setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -334,7 +353,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JMenuItem menuAddRm;
