@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  *
  * @author ITACHI
  */
-public class RoomList extends javax.swing.JFrame {
+public class RoomList extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form RoomList

@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ITACHI
  */
-public class Billing extends javax.swing.JFrame {
+public class Billing extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Billing

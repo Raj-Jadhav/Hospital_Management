@@ -15,14 +15,14 @@ import javax.swing.JOptionPane;
  *
  * @author ITACHI
  */
-public class PatientList extends javax.swing.JFrame {
+public class PatientList extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form PatientList
      */
     public PatientList() {
         initComponents();
-    tblPatients.setModel(new javax.swing.table.DefaultTableModel(
+        tblPatients.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {},
         new String [] {
         "Patient ID", "Name", "Age", "Gender", "Blood_group", "Address", "Contact No"

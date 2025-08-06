@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ITACHI
  */
-public class ServiceEntry extends javax.swing.JFrame {
+public class ServiceEntry extends javax.swing.JInternalFrame {
     private Integer serviceID = null;
     /**
      * Creates new form ServiceEntry

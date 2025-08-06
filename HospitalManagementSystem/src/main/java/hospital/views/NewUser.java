@@ -15,13 +15,14 @@ import javax.swing.JPasswordField;
  *
  * @author ITACHI
  */
-public class NewUser extends javax.swing.JFrame {
+public class NewUser extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form NewUser
      */
     public NewUser() {
         initComponents();
+        
     }
 private void clearFields() {
     txtFullName.setText("");
@@ -63,7 +64,7 @@ private void clearFields() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 241));
+        jPanel1.setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 204), 1, true));
 

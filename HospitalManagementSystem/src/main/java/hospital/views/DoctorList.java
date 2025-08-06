@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  *
  * @author ITACHI
  */
-public class DoctorList extends javax.swing.JFrame {
+public class DoctorList extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form DoctorList

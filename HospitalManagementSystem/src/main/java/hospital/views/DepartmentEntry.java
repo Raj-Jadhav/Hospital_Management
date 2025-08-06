@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author ITACHI
  */
-public class DepartmentEntry extends javax.swing.JFrame {
+public class DepartmentEntry extends javax.swing.JInternalFrame {
     private Integer departmentID = null;
 
     /**

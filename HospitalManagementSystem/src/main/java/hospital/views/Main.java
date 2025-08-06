@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package hospital.views;
+import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,8 +22,10 @@ public class Main extends javax.swing.JFrame {
         setTitle("Dashboard");
         setSize(400, 300);
         setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(new JLabel("Welcome to Hospital Management System!"));
+        
     }
     
     /**
@@ -37,6 +40,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        desktopPane = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuNewUser = new javax.swing.JMenuItem();
@@ -74,7 +78,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(149, 149, 149)
                 .addComponent(jLabel1)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(278, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,22 +88,41 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
+        desktopPane.setLayout(desktopPaneLayout);
+        desktopPaneLayout.setHorizontalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        desktopPaneLayout.setVerticalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 600, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(desktopPane)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(407, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(desktopPane)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("Admin");
 
@@ -227,28 +250,14 @@ public class Main extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void menuPatientRegistrationActionPerformed(java.awt.event.ActionEvent evt) {
-        
-    }
-   
+
     private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             System.exit(0);
-    }
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_menuExitActionPerformed
 
@@ -258,58 +267,81 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuLogoutActionPerformed
 
-    private void menuNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewUserActionPerformed
-        NewUser user = new NewUser();
-        user.setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuNewUserActionPerformed
-
-    private void menuPListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPListActionPerformed
-      PatientList plist = new PatientList();
-        plist.setVisible(true);
-       // TODO add your handling code here:
-    }//GEN-LAST:event_menuPListActionPerformed
-
-    private void menuPRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRegistrationActionPerformed
-        new PatientRegistration().setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuPRegistrationActionPerformed
-
-    private void menuDEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDEntryActionPerformed
-        new DoctorEntry().setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuDEntryActionPerformed
-
-    private void menuDListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDListActionPerformed
-        new DoctorList().setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuDListActionPerformed
-
-    private void menuAddRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddRmActionPerformed
-      new RoomManagement(null).setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuAddRmActionPerformed
-
-    private void menuViewRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuViewRmActionPerformed
-        new RoomList().setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuViewRmActionPerformed
-
-    private void menuAddSvcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddSvcActionPerformed
-        new ServiceEntry().setVisible(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuAddSvcActionPerformed
-
     private void menuBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBillingActionPerformed
-        new Billing().setVisible(true);
+        Billing bill = new Billing();
+        desktopPane.add(bill);
+        bill.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuBillingActionPerformed
 
+    private void menuAddSvcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddSvcActionPerformed
+        ServiceEntry svcentry = new ServiceEntry();
+        desktopPane.add(svcentry);
+        svcentry.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuAddSvcActionPerformed
+
+    private void menuViewRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuViewRmActionPerformed
+        RoomList rmlist = new RoomList();
+        desktopPane.add(rmlist);
+        rmlist.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuViewRmActionPerformed
+
+    private void menuAddRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddRmActionPerformed
+        RoomManagement rmmgt = new RoomManagement(null);
+        desktopPane.add(rmmgt);
+        rmmgt.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuAddRmActionPerformed
+
+    private void menuDListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDListActionPerformed
+        DoctorList drlist = new DoctorList();
+        desktopPane.add(drlist);
+        drlist.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuDListActionPerformed
+
+    private void menuDEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDEntryActionPerformed
+        DoctorEntry drentry = new DoctorEntry();
+        desktopPane.add(drentry);
+        drentry.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuDEntryActionPerformed
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        new DepartmentEntry().setVisible(true);
+        DepartmentEntry dptentry = new DepartmentEntry();
+        desktopPane.add(dptentry);
+        dptentry.setVisible(true);
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void menuPListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPListActionPerformed
+        PatientList plist = new PatientList();
+        desktopPane.add(plist);
+        plist.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuPListActionPerformed
+
+    private void menuPRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRegistrationActionPerformed
+        PatientRegistration pr = new PatientRegistration();
+        desktopPane.add(pr);
+        pr.setSize(desktopPane.getWidth(), desktopPane.getHeight());
+        pr.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuPRegistrationActionPerformed
+
+    private void menuNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewUserActionPerformed
+        NewUser user = new NewUser();
+        desktopPane.add(user);
+        user.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuNewUserActionPerformed
+    private void menuPatientRegistrationActionPerformed(java.awt.event.ActionEvent evt) {
+        
+    }
+   
     /**
      * @param args the command line arguments
      */
@@ -346,6 +378,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

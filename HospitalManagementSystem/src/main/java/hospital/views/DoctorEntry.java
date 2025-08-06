@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author ITACHI
  */
-public class DoctorEntry extends javax.swing.JFrame {
+public class DoctorEntry extends javax.swing.JInternalFrame {
 private Integer doctorID = null;
     /**
      * Creates new form DoctorEntry
@@ -576,4 +576,18 @@ private Integer doctorID = null;
     private javax.swing.JTextArea txtQualifications;
     private javax.swing.JTextField txtSpecialization;
     // End of variables declaration//GEN-END:variables
-}     
+private void setLocationRelativeTo(Object object) {
+    if (getParent() != null) {
+        // Center the JInternalFrame within its parent (e.g., JDesktopPane)
+        int parentWidth = getParent().getWidth();
+        int parentHeight = getParent().getHeight();
+        int frameWidth = getWidth();
+        int frameHeight = getHeight();
+        setLocation((parentWidth - frameWidth) / 2, (parentHeight - frameHeight) / 2);
+    } else {
+        // Fallback: Position at a default location if no parent
+        setLocation(0, 0);
+    }
+}
+}
+     
