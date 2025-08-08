@@ -5,6 +5,7 @@
 package hospital.views;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 /**
@@ -27,7 +28,12 @@ public class Main extends javax.swing.JFrame {
         add(new JLabel("Welcome to Hospital Management System!"));
         
     }
-    
+    private void closeAllInternalFrames() {
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+        frame.dispose(); // closes the frame
+    }
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -268,6 +274,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuLogoutActionPerformed
 
     private void menuBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBillingActionPerformed
+        closeAllInternalFrames();
         Billing bill = new Billing();
         desktopPane.add(bill);
         bill.setVisible(true);
@@ -275,6 +282,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuBillingActionPerformed
 
     private void menuAddSvcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddSvcActionPerformed
+        closeAllInternalFrames();
         ServiceEntry svcentry = new ServiceEntry();
         desktopPane.add(svcentry);
         svcentry.setVisible(true);
@@ -282,6 +290,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuAddSvcActionPerformed
 
     private void menuViewRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuViewRmActionPerformed
+        closeAllInternalFrames();
         RoomList rmlist = new RoomList();
         desktopPane.add(rmlist);
         rmlist.setVisible(true);
@@ -289,6 +298,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuViewRmActionPerformed
 
     private void menuAddRmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAddRmActionPerformed
+        closeAllInternalFrames();
         RoomManagement rmmgt = new RoomManagement(null);
         desktopPane.add(rmmgt);
         rmmgt.setVisible(true);
@@ -296,6 +306,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuAddRmActionPerformed
 
     private void menuDListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDListActionPerformed
+        closeAllInternalFrames();
         DoctorList drlist = new DoctorList();
         desktopPane.add(drlist);
         drlist.setVisible(true);
@@ -303,6 +314,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuDListActionPerformed
 
     private void menuDEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDEntryActionPerformed
+        closeAllInternalFrames();
         DoctorEntry drentry = new DoctorEntry();
         desktopPane.add(drentry);
         drentry.setVisible(true);
@@ -310,6 +322,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuDEntryActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        closeAllInternalFrames();
         DepartmentEntry dptentry = new DepartmentEntry();
         desktopPane.add(dptentry);
         dptentry.setVisible(true);
@@ -318,6 +331,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void menuPListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPListActionPerformed
+        closeAllInternalFrames();
         PatientList plist = new PatientList();
         desktopPane.add(plist);
         plist.setVisible(true);
@@ -325,6 +339,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuPListActionPerformed
 
     private void menuPRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRegistrationActionPerformed
+        closeAllInternalFrames();
         PatientRegistration pr = new PatientRegistration();
         desktopPane.add(pr);
         pr.setSize(desktopPane.getWidth(), desktopPane.getHeight());
@@ -333,14 +348,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuPRegistrationActionPerformed
 
     private void menuNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewUserActionPerformed
+        closeAllInternalFrames();
         NewUser user = new NewUser();
         desktopPane.add(user);
         user.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_menuNewUserActionPerformed
-    private void menuPatientRegistrationActionPerformed(java.awt.event.ActionEvent evt) {
-        
-    }
    
     /**
      * @param args the command line arguments

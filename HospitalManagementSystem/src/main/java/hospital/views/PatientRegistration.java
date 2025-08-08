@@ -26,11 +26,7 @@ private Integer currentRoomID = null; // Track the current room for editing
         setLocationRelativeTo(null);
         clearFields(); // Ensure fields are empty for new registration
         loadDepartments();
-        setClosable(true);
-        setIconifiable(true);
-        setResizable(true);
-        setMaximizable(true);
-    }
+   }
 
     public PatientRegistration(int id) {
         initComponents();
