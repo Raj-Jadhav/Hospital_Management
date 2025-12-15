@@ -35,8 +35,10 @@ public class RoomManagement extends javax.swing.JInternalFrame {
         }
     }
 
-    private RoomManagement() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public RoomManagement() {
+        initComponents();
+        setLocationRelativeTo(null);
+        clearFields();
     }
     private void loadRoomDetails(int id) {
         try {
