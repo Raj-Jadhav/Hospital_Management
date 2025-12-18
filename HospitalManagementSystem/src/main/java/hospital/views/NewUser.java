@@ -4,7 +4,11 @@
  */
 package hospital.views;
 
-//import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import javax.swing.JPanel;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +25,28 @@ public class NewUser extends javax.swing.JInternalFrame {
      * Creates new form NewUser
      */
     public NewUser() {
-        initComponents();
-        
-    }
+    initComponents();
+
+    // Make this an internal frame-friendly form
+    setClosable(true);
+    setMaximizable(true);
+    setIconifiable(false);
+    setResizable(true);
+
+    // Remove NetBeans layout
+    getContentPane().removeAll();
+    setLayout(new BorderLayout());
+
+    // Wrapper to center form
+    JPanel wrapper = new JPanel(new GridBagLayout());
+    wrapper.setBackground(new Color(245, 247, 250));
+
+    // jPanel1 is your REAL form
+    wrapper.add(jPanel1);
+
+    add(wrapper, BorderLayout.CENTER);
+}
+
 private void clearFields() {
     txtFullName.setText("");
     txtUsername.setText("");
@@ -331,7 +354,7 @@ private void clearFields() {
     }//GEN-LAST:event_btnUpdateUserActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        System.exit(0);
+        dispose();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCloseActionPerformed
     

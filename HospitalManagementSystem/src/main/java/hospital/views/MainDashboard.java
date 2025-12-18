@@ -29,7 +29,9 @@ public class MainDashboard extends javax.swing.JFrame {
         sidebar = new JPanel();
         sidebar.setBackground(new Color(25, 118, 210));
         sidebar.setPreferredSize(new Dimension(220, getHeight()));
-        sidebar.setLayout(new GridLayout(8, 1, 0, 10));
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
 
         JLabel logo = new JLabel("<html><center><b style='font-size:14px;color:white;'>🏥 HOSPITAL NAME </b></center></html>", SwingConstants.CENTER);
         logo.setPreferredSize(new Dimension(200, 60));
@@ -63,7 +65,10 @@ public class MainDashboard extends javax.swing.JFrame {
             () -> openModule(new DoctorList())
         }
         ));
-               
+        
+        //Service button
+        addSidebarButton("Service");
+        
         //Rooms button
         sidebar.add(createDropdownMenu(
          "Rooms",
@@ -74,8 +79,7 @@ public class MainDashboard extends javax.swing.JFrame {
         }
         ));
         
-        //Service button
-        addSidebarButton("Service");
+        
         
         //Billings button
         addSidebarButton("Billing");              
@@ -96,7 +100,7 @@ public class MainDashboard extends javax.swing.JFrame {
 
     JPanel container = new JPanel(new BorderLayout());
     container.setBackground(new Color(25, 118, 210));
-
+    /*
     JButton mainBtn = new JButton("  " + title + " ▾");
     mainBtn.setFocusPainted(false);
     mainBtn.setBackground(new Color(25, 118, 210));
@@ -104,13 +108,39 @@ public class MainDashboard extends javax.swing.JFrame {
     mainBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
     mainBtn.setBorderPainted(false);
     mainBtn.setHorizontalAlignment(SwingConstants.LEFT);
+    */
+    JButton mainBtn = new JButton(title + " ▾");
+    mainBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+    mainBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+    mainBtn.setPreferredSize(new Dimension(200, 45));
+    mainBtn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+    mainBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    
+    mainBtn.setFocusPainted(false);
+    mainBtn.setBackground(new Color(25, 118, 210));
+    mainBtn.setForeground(Color.WHITE);
+    mainBtn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    mainBtn.setBorderPainted(false);
+    mainBtn.setHorizontalAlignment(SwingConstants.LEFT);
 
-    JPanel submenu = new JPanel(new GridLayout(items.length, 1));
+    
+    JPanel submenu = new JPanel();
+    submenu.setLayout(new BoxLayout(submenu, BoxLayout.Y_AXIS));
+    submenu.setBackground(new Color(21, 101, 192));
+    submenu.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+    submenu.setVisible(false);
+
     submenu.setBackground(new Color(21, 101, 192));
     submenu.setVisible(false);
 
     for (int i = 0; i < items.length; i++) {
-        JButton subBtn = new JButton("     • " + items[i]);
+    JButton subBtn = new JButton(items[i]);
+    subBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+    subBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+    subBtn.setPreferredSize(new Dimension(200, 40));
+    subBtn.setBorder(BorderFactory.createEmptyBorder(8, 30, 8, 10));
+    subBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         subBtn.setFocusPainted(false);
         subBtn.setBackground(new Color(21, 101, 192));
         subBtn.setForeground(Color.WHITE);
@@ -133,43 +163,52 @@ public class MainDashboard extends javax.swing.JFrame {
 }
 
     private void addSidebarButton(String text) {
-        JButton btn = new JButton("  " + text);
-        btn.setFocusPainted(false);
-        btn.setBackground(new Color(25, 118, 210));
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn.setBorderPainted(false);
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Hover effect
-        btn.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent evt) {
-                btn.setBackground(new Color(21, 101, 192));
-            }
+    JButton btn = new JButton(text);
+    btn.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            public void mouseExited(MouseEvent evt) {
-                btn.setBackground(new Color(25, 118, 210));
-            }
-        });
+    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+    btn.setPreferredSize(new Dimension(200, 45));
 
-        // Action events
-        btn.addActionListener(e -> {
-            switch (text) {
-                case "Dashboard" -> showHomeScreen();
-                case "Users" -> openInternalFrame(new NewUser());
-                case "Patients" -> openInternalFrame(new PatientRegistration());
-                case "Departments" -> openInternalFrame(new DepartmentEntry());
-                case "Doctors" -> openInternalFrame(new DoctorEntry());
-                case "Rooms" -> openInternalFrame(new RoomManagement());
-                case "Service" -> openInternalFrame(new ServiceEntry());
-                case "Billing" -> openInternalFrame(new Billing());                
-                case "Logout" -> logout();
-                default -> JOptionPane.showMessageDialog(this, "Coming soon!");
-            }
-        });
+    btn.setFocusPainted(false);
+    btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+    btn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        sidebar.add(btn);
-    }
+    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    btn.setForeground(Color.WHITE);
+    btn.setBackground(new Color(25, 118, 210));
+    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+    // Hover effect (modern)
+    btn.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            btn.setBackground(new Color(30, 136, 229));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            btn.setBackground(new Color(21, 101, 192));
+        }
+    });
+
+    // Action logic (UNCHANGED)
+    btn.addActionListener(e -> {
+        switch (text) {
+            case "Dashboard" -> showHomeScreen();
+            case "Users" -> openInternalFrame(new NewUser());
+            case "Departments" -> openInternalFrame(new DepartmentEntry());
+            case "Service" -> openInternalFrame(new ServiceEntry());
+            case "Billing" -> openInternalFrame(new Billing());
+            case "Logout" -> logout();
+            default -> JOptionPane.showMessageDialog(this, "Coming soon!");
+        }
+    });
+
+    sidebar.add(btn);
+    sidebar.add(Box.createVerticalStrut(6)); // 🔥 spacing fix
+}
+
     private void showHomeScreen() {
         desktop.removeAll();
         desktop.repaint();
@@ -290,6 +329,27 @@ private void openModule(JInternalFrame frame) {
     } catch (Exception ignored) {}
 }
 
+    /*
+    private void openModule(JInternalFrame frame) {
+    desktop.removeAll();
+    desktop.revalidate();
+    desktop.repaint();
+
+    frame.setBorder(null);
+    frame.setClosable(false);
+    frame.setIconifiable(false);
+    frame.setResizable(true);
+    frame.setVisible(true);
+
+    frame.setLayout(new BorderLayout());
+
+    desktop.add(frame, BorderLayout.CENTER);
+
+    try {
+        frame.setMaximum(true);
+    } catch (Exception ignored) {}
+}
+*/
 
     private void openWindow(JFrame frame) {
         frame.setVisible(true);
