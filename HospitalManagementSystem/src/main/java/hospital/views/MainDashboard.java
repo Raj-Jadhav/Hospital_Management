@@ -100,9 +100,9 @@ public class MainDashboard extends javax.swing.JFrame {
 
 
         addHomeCard("Patients", "patients.png", () -> openInternalFrame(new PatientRegistration()));
-        addHomeCard("Doctors", "doctor.png", () -> openInternalFrame(new DoctorEntry()));
-        addHomeCard("Departments", "department.png", () -> openInternalFrame(new DepartmentEntry()));
-        addHomeCard("Rooms", "room.png", () -> openInternalFrame(new RoomManagement()));
+        addHomeCard("Doctors", "doctors.png", () -> openInternalFrame(new DoctorEntry()));
+        addHomeCard("Departments", "departments.png", () -> openInternalFrame(new DepartmentEntry()));
+        addHomeCard("Rooms", "rooms.png", () -> openInternalFrame(new RoomManagement()));
         addHomeCard("Billing", "billing.png", () -> openInternalFrame(new Billing()));
         addHomeCard("Users", "user.png", () -> openInternalFrame(new NewUser()));
 
@@ -235,12 +235,12 @@ public class MainDashboard extends javax.swing.JFrame {
         //</editor-fold>
          SwingUtilities.invokeLater(() -> new MainDashboard().setVisible(true));
 
-        /* Create and display the form */
+        /* Create and display the form 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainDashboard().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
