@@ -31,19 +31,59 @@ public class MainDashboard extends javax.swing.JFrame {
         sidebar.setPreferredSize(new Dimension(220, getHeight()));
         sidebar.setLayout(new GridLayout(8, 1, 0, 10));
 
-        JLabel logo = new JLabel("<html><center><b style='font-size:14px;color:white;'>🏥 HOSPITAL</b></center></html>", SwingConstants.CENTER);
+        JLabel logo = new JLabel("<html><center><b style='font-size:14px;color:white;'>🏥 HOSPITAL NAME </b></center></html>", SwingConstants.CENTER);
         logo.setPreferredSize(new Dimension(200, 60));
         sidebar.add(logo);
-
+        
+        //Dashboard button
         addSidebarButton("Dashboard");
-        addSidebarButton("Patients");
-        addSidebarButton("Doctors");
-        addSidebarButton("Departments");
-        addSidebarButton("Rooms");
-        addSidebarButton("Billing");
+        
+        //users button
         addSidebarButton("Users");
+        
+        //Patients button
+        sidebar.add(createDropdownMenu(
+        "Patients",
+        new String[]{"Patient Registration", "Patient List"},
+        new Runnable[]{
+        () -> openModule(new PatientRegistration()),
+        () -> openModule(new PatientList())
+        }
+        ));
+        
+        //Departments button
+        addSidebarButton("Departments");
+        
+        //Doctors button
+        sidebar.add(createDropdownMenu(
+        "Doctors",
+        new String[]{"Doctor Entry", "Doctor List"},
+        new Runnable[]{
+            () -> openModule(new DoctorEntry()),
+            () -> openModule(new DoctorList())
+        }
+        ));
+               
+        //Rooms button
+        sidebar.add(createDropdownMenu(
+         "Rooms",
+        new String[]{"Room Registration", "Room List"},
+        new Runnable[]{
+        () -> openModule(new RoomManagement()),
+        () -> openModule(new RoomList())
+        }
+        ));
+        
+        //Service button
+        addSidebarButton("Service");
+        
+        //Billings button
+        addSidebarButton("Billing");              
+               
+        //Logout button
         addSidebarButton("Logout");
 
+        
         // --- Desktop Pane (main area) ---
         desktop = new JDesktopPane();
         desktop.setBackground(new Color(245, 247, 250));
@@ -52,6 +92,46 @@ public class MainDashboard extends javax.swing.JFrame {
         add(desktop, BorderLayout.CENTER);
         showHomeScreen();
     }
+    private JPanel createDropdownMenu(String title, String[] items, Runnable[] actions) {
+
+    JPanel container = new JPanel(new BorderLayout());
+    container.setBackground(new Color(25, 118, 210));
+
+    JButton mainBtn = new JButton("  " + title + " ▾");
+    mainBtn.setFocusPainted(false);
+    mainBtn.setBackground(new Color(25, 118, 210));
+    mainBtn.setForeground(Color.WHITE);
+    mainBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    mainBtn.setBorderPainted(false);
+    mainBtn.setHorizontalAlignment(SwingConstants.LEFT);
+
+    JPanel submenu = new JPanel(new GridLayout(items.length, 1));
+    submenu.setBackground(new Color(21, 101, 192));
+    submenu.setVisible(false);
+
+    for (int i = 0; i < items.length; i++) {
+        JButton subBtn = new JButton("     • " + items[i]);
+        subBtn.setFocusPainted(false);
+        subBtn.setBackground(new Color(21, 101, 192));
+        subBtn.setForeground(Color.WHITE);
+        subBtn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        subBtn.setBorderPainted(false);
+        subBtn.setHorizontalAlignment(SwingConstants.LEFT);
+
+        int index = i;
+        subBtn.addActionListener(e -> actions[index].run());
+
+        submenu.add(subBtn);
+    }
+
+    mainBtn.addActionListener(e -> submenu.setVisible(!submenu.isVisible()));
+
+    container.add(mainBtn, BorderLayout.NORTH);
+    container.add(submenu, BorderLayout.CENTER);
+
+    return container;
+}
+
     private void addSidebarButton(String text) {
         JButton btn = new JButton("  " + text);
         btn.setFocusPainted(false);
@@ -76,12 +156,13 @@ public class MainDashboard extends javax.swing.JFrame {
         btn.addActionListener(e -> {
             switch (text) {
                 case "Dashboard" -> showHomeScreen();
-                case "Patients" -> openInternalFrame(new PatientRegistration());
-                case "Doctors" -> openInternalFrame(new DoctorEntry());
-                case "Departments" -> openInternalFrame(new DepartmentEntry());
-                case "Rooms" -> openInternalFrame(new RoomManagement());
-                case "Billing" -> openInternalFrame(new Billing());
                 case "Users" -> openInternalFrame(new NewUser());
+                case "Patients" -> openInternalFrame(new PatientRegistration());
+                case "Departments" -> openInternalFrame(new DepartmentEntry());
+                case "Doctors" -> openInternalFrame(new DoctorEntry());
+                case "Rooms" -> openInternalFrame(new RoomManagement());
+                case "Service" -> openInternalFrame(new ServiceEntry());
+                case "Billing" -> openInternalFrame(new Billing());                
                 case "Logout" -> logout();
                 default -> JOptionPane.showMessageDialog(this, "Coming soon!");
             }
@@ -92,22 +173,41 @@ public class MainDashboard extends javax.swing.JFrame {
     private void showHomeScreen() {
         desktop.removeAll();
         desktop.repaint();
+        
+        // Create dashboard internal frame
+        JInternalFrame dashboardFrame = new JInternalFrame(
+            "Dashboard", false, false, false, false
+        );
+        dashboardFrame.setBorder(null);
+        dashboardFrame.setVisible(true);
+        dashboardFrame.setLayout(new BorderLayout());
 
         homePanel = new JPanel();
         homePanel.setLayout(new GridLayout(2, 3, 40, 40));
         homePanel.setBackground(new Color(245, 247, 250));
         homePanel.setBorder(BorderFactory.createEmptyBorder(60, 60, 60, 60));
 
-
-        addHomeCard("Patients", "patients.png", () -> openInternalFrame(new PatientRegistration()));
-        addHomeCard("Doctors", "doctors.png", () -> openInternalFrame(new DoctorEntry()));
-        addHomeCard("Departments", "departments.png", () -> openInternalFrame(new DepartmentEntry()));
-        addHomeCard("Rooms", "rooms.png", () -> openInternalFrame(new RoomManagement()));
-        addHomeCard("Billing", "billing.png", () -> openInternalFrame(new Billing()));
         addHomeCard("Users", "user.png", () -> openInternalFrame(new NewUser()));
+        addHomeCard("Patients", "patients.png", () -> openModule(new PatientRegistration()));
+        addHomeCard("Departments", "departments.png", () -> openModule(new DepartmentEntry()));
+        
+        addHomeCard("Doctors", "doctors.png", () -> openModule(new DoctorEntry()));
+        addHomeCard("Rooms", "rooms.png", () -> openModule(new RoomManagement()));
+        addHomeCard("Services", "Service.png", () -> openInternalFrame(new ServiceEntry()));
+        addHomeCard("Billing", "billing.png", () -> openInternalFrame(new Billing()));
+        
+        
+        dashboardFrame.add(homePanel, BorderLayout.CENTER);
+        desktop.add(dashboardFrame);
 
-        desktop.add(homePanel);
-        homePanel.setBounds(0, 0, desktop.getWidth(), desktop.getHeight());
+        try {
+        dashboardFrame.setMaximum(true);
+        } catch (Exception ignored) {}
+
+        
+        //desktop.add(wrapper);
+        //desktop.add(homePanel);
+        //homePanel.setBounds(0, 0, desktop.getWidth(), desktop.getHeight());
         desktop.revalidate();
         desktop.repaint();
     }
@@ -173,6 +273,22 @@ public class MainDashboard extends javax.swing.JFrame {
             new Login().setVisible(true); // adjust to your login form name
         }
     }
+
+private void openModule(JInternalFrame frame) {
+    desktop.removeAll();
+    desktop.repaint();
+
+    frame.setVisible(true);
+    frame.setClosable(false);
+    frame.setMaximizable(true);
+    frame.setIconifiable(false);
+    frame.setResizable(true);
+
+    desktop.add(frame);
+    try {
+        frame.setMaximum(true);
+    } catch (Exception ignored) {}
+}
 
 
     private void openWindow(JFrame frame) {
@@ -243,6 +359,7 @@ public class MainDashboard extends javax.swing.JFrame {
         });*/
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
